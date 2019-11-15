@@ -9,6 +9,7 @@ pool:
 jobs:
 - job: BuildAndTest
   displayName: 'Build & Test'
+  pool: $(defaultPool)
   steps:
     - task: NodeTool@0
       inputs:
