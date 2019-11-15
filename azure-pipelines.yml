@@ -1,8 +1,3 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - master
 - develop
@@ -11,47 +6,51 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '12.x'
-  displayName: 'Install Node.js 12.x'
+jobs:
+- job: Test
+  steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '12.x'
+      displayName: 'Install Node.js 12.x'
 
-- script: npm install
-  displayName: 'Install dependencies'
+    - script: npm install
+      displayName: 'Install dependencies'
 
-- script: npm run test:ci
-  displayName: Run tests
+    - script: npm run test:ci
+      displayName: Run tests
 
-- script: npm run build
-  displayName: 'Build application'
+    - task: PublishTestResults@2
+      displayName: Publish test results
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: 'junit.xml'
+        mergeTestResults: true
+        testRunTitle: 'Unit tests'
 
-- task: PublishTestResults@2
-  displayName: Publish test results
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: 'junit.xml'
-    mergeTestResults: true
-    testRunTitle: 'Unit tests'
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish code coverage results
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: 'coverage/cobertura-coverage.xml'
 
-- task: PublishCodeCoverageResults@1
-  displayName: Publish code coverage results
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: 'coverage/cobertura-coverage.xml'
+- job: Build
+  steps:
+    - script: npm run build
+      displayName: 'Build application'
 
-- task: CopyFiles@2
-  inputs:
-    Contents: |
-      build/*
-      package.json
-      package-lock.json
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    CleanTargetFolder: true
-    preserveTimestamp: true
+    - task: CopyFiles@2
+      inputs:
+        Contents: |
+          build/*
+          package.json
+          package-lock.json
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        CleanTargetFolder: true
+        preserveTimestamp: true
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'app'
-    publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathToPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'app'
+        publishLocation: 'Container'
