@@ -5,6 +5,7 @@
 
 trigger:
 - master
+- develop
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -37,3 +38,19 @@ steps:
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: 'coverage/cobertura-coverage.xml'
+
+- task: CopyFiles@2
+  inputs:
+    Contents: |
+      build/*
+      package.json
+      package-lock.json
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    CleanTargetFolder: true
+    preserveTimestamp: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'app'
+    publishLocation: 'Container'
