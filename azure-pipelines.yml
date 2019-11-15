@@ -19,10 +19,10 @@ steps:
   displayName: 'Install dependencies'
 
 - script: npm run test:ci
-  displayName: 'Run unit tests'
+  displayName: Run tests
 
 - task: PublishTestResults@2
-  displayName: Publish
+  displayName: Publish test results
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'junit.xml'
@@ -30,4 +30,4 @@ steps:
     testRunTitle: 'Unit tests'
 
 - script: npm run build
-  displayName: 'Build'
+  displayName: 'Build application'
