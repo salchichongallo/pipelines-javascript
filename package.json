@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "backpack",
+    "build": "backpack build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "@types/jest": "^24.0.23",
+    "babel-jest": "^24.9.0",
+    "backpack-core": "^0.8.4",
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
+  }
+}
