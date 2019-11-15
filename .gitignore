@@ -62,3 +62,6 @@ typings/
 
 # Build output
 build/
+
+# Jest reporter junit XML file
+junit.xml
